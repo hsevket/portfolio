@@ -1,0 +1,115 @@
+@import "../../global.scss";
+
+.intro {
+    background-color: white;
+    display: flex;
+    
+    @include mobile{
+        flex-direction: column;
+        align-items: center;
+    }
+
+
+    .left{
+        flex: 0.5;
+        overflow: hidden;
+        .imageContainer{
+            width: 100%;
+            height:100%;
+            caret-color: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            align-self: flex-start;
+            @include mobile{
+                
+                align-items: flex-start;
+            }
+        
+            img{
+                height: 90%;
+                @include mobile{
+                    
+                }
+            
+            }
+
+        }
+
+    }
+    .right{
+        flex:0.5;
+        position: relative;
+        overflow: hidden;
+        .wrapper{
+            width: 100%;
+            height: 100%;
+            padding-left: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            
+            @include mobile{
+                padding-left: 0;
+                align-items: center;
+            }
+        
+            h1{
+                font-size: 3rem;
+                margin: 10px 0;
+                @include mobile{
+                    font-size: 35px;
+                }
+            
+
+            }
+            h2{
+                font-size: 2rem;
+
+            }
+            h3{
+                font-size: 2rem;
+                span{
+                    color: crimson;
+                    font-size: inherit;
+                }
+                .ityped-cursor{
+                    animation: blink 1s infinite;
+                }
+                @keyframes blink {
+                    50%{
+                        opacity: 1;
+                    }
+                    100%{
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+        a{
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+
+            img{
+                width: 3rem;
+                animation: arrowBlink 2s infinite;
+                
+            }
+
+            @include mobile{
+                display: none;
+            }
+        
+
+        @keyframes arrowBlink {
+            100%{
+                opacity: 0;
+                margin-bottom: 20px;
+            }
+        }
+        }
+    }
+}
