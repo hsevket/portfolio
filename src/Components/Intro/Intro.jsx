@@ -12,7 +12,7 @@ export default function Intro() {
       showCursor: true,
       backDelay: 1500,
       backSpeed: 60,
-      strings:["REACT", "Angular", "Java Script",  ".NET", "FullStack"]
+      strings:["REACT", "Angular", "Javascript",  ".NET", "FullStack"]
     });
   }, []);
   
