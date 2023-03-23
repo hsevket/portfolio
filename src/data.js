@@ -25,7 +25,7 @@ export const reactPortfolio = [
   export const angularPortfolio = [
     {
       id: 1,
-      title: "Angular Shopping List",
+      title: "Angular Shopping List with Grapql",
       img:
         "./assets/angular.png",
       url: "https://shopiing-list.vercel.app/lists"
