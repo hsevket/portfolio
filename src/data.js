@@ -28,7 +28,7 @@ export const reactPortfolio = [
       title: "Angular Shopping List",
       img:
         "./assets/angular.png",
-      url: "https://angular-omega-six.vercel.app/lists"
+      url: "https://shopiing-list.vercel.app/lists"
     },
   ];
   
