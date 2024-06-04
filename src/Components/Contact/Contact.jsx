@@ -33,7 +33,7 @@ export default function Contact() {
       <div className="right">
         <h2>Contact.</h2>
         {message ? (
-          <div><h3>Thank you for your interest</h3>
+          <div><h3>Thank you for your interest!!!</h3>
         <p>I will reply your message as soon as possible</p> </div>
         ) : (
           <form onSubmit={handleSubmit}>
