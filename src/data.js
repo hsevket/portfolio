@@ -19,6 +19,7 @@ export const reactPortfolio = [
       id: 1,
       title: "Web Social Media App",
       img: "https://cdn.dribbble.com/users/5031392/screenshots/15467520/media/c36b3b15b25b1e190d081abdbbf947cf.png?compress=1&resize=1200x900",
+      url: "#"
     },
   ];
   
@@ -38,7 +39,7 @@ export const reactPortfolio = [
       title: "Comming Soon",
       img:
         "./assets/placeholder.jpeg",
-      
+      url: "#",
     },
   ];
   export const mobilePortfolio = [
@@ -47,5 +48,6 @@ export const reactPortfolio = [
       title: "Comming Soon",
       img:
         "./assets/placeholder.jpeg",
+      url: "#",
     },
   ];
