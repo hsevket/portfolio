@@ -1,5 +1,5 @@
-import connectDB from "@/lib/mongodb";
-import Project from "@/models/Project";
+import connectDB from "@/app/lib/mongodb";
+import Project from "@/app/models/Project";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
