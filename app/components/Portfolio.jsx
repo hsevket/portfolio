@@ -15,7 +15,7 @@ const DATA = {
     { name: "D365", level: 95 }, { name: "Power Automate", level: 90 }, { name: "Power Platform", level: 88 },
     { name: "C# / .NET", level: 85 }, { name: "Azure DevOps", level: 82 }, { name: "SQL Server", level: 88 },
     { name: "Power Automate", level: 85 }, { name: "JavaScript", level: 95 }, { name: "Data Entities", level: 90 },
-    { name: "SSRS", level: 80 }, { name: "LCS", level: 85 }, { name: "Azure Services", level: 78 },
+    { name: "Azure Services", level: 78 },
   ],
   articles: [
     { id: 1, title: "Extending D365 F&O with Chain of Command", excerpt: "Chain of Command is the modern way to customize D365 without over-layering. Here's how to use it effectively.", date: "Feb 12, 2026", readTime: "8 min", tags: ["D365 F&O", "X++"] },
