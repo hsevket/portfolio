@@ -5,16 +5,16 @@ const DATA = {
   name: "Hamdi Sevketbeyoglu",
   title: "D365 Developer",
   tagline: "Transforming business processes through Dynamics 365 solutions.",
-  bio: "I'm a Dynamics 365 developer passionate about building scalable ERP/CRM solutions that drive real business value. With deep expertise in X++, Power Platform, Azure integrations, and the full D365 ecosystem, I help organizations modernize their operations.",
-  email: "hamdi@example.dev",
+  bio: "I'm a Dynamics 365 developer passionate about building scalable ERP/CRM solutions that drive real business value. With deep expertise in CRM, Power Platform, Azure integrations, and the full D365 ecosystem, I help organizations modernize their operations.",
+  email: "hamdi.sevketbeyoglu@gmail.com",
   github: "https://github.com/hamdisevketbeyoglu",
   linkedin: "https://linkedin.com/in/hamdisevketbeyoglu",
   website: "https://www.hamdisevketbeyoglu.com",
-  profileImage: null,
+  profileImage: "/profile.jpg",
   skills: [
-    { name: "D365 F&O", level: 95 }, { name: "X++", level: 90 }, { name: "Power Platform", level: 88 },
+    { name: "D365", level: 95 }, { name: "Power Automate", level: 90 }, { name: "Power Platform", level: 88 },
     { name: "C# / .NET", level: 85 }, { name: "Azure DevOps", level: 82 }, { name: "SQL Server", level: 88 },
-    { name: "Power Automate", level: 85 }, { name: "JavaScript", level: 75 }, { name: "Data Entities", level: 90 },
+    { name: "Power Automate", level: 85 }, { name: "JavaScript", level: 95 }, { name: "Data Entities", level: 90 },
     { name: "SSRS", level: 80 }, { name: "LCS", level: 85 }, { name: "Azure Services", level: 78 },
   ],
   articles: [
@@ -72,20 +72,38 @@ function ThreeScene() {
     const particles = new THREE.Points(pGeo, pMat);
     scene.add(particles);
 
-    // Shapes
-    const mkMat = (c, o = 0.15) => new THREE.MeshBasicMaterial({ color: c, wireframe: true, transparent: true, opacity: o });
+    // ── Floating Tech Logos (loaded from PNG files in /public) ────────
     const shapes = [];
-    const add = (geo, c, o, pos, rs, fs, fa) => {
-      const m = new THREE.Mesh(geo, mkMat(c, o));
-      m.position.set(...pos);
-      scene.add(m);
-      shapes.push({ mesh: m, rs, fs, fa });
-    };
-    add(new THREE.IcosahedronGeometry(3, 1), "#a78bfa", 0.18, [-15, 8, -10], { x: 0.003, y: 0.005 }, 0.5, 2);
-    add(new THREE.OctahedronGeometry(2.5), "#22d3ee", 0.16, [18, -5, -8], { x: 0.004, y: 0.003 }, 0.7, 1.5);
-    add(new THREE.TorusGeometry(2, 0.5, 8, 24), "#f472b6", 0.13, [12, 12, -15], { x: 0.005, y: 0.002 }, 0.3, 3);
-    add(new THREE.DodecahedronGeometry(2), "#34d399", 0.1, [-18, -10, -12], { x: 0.002, y: 0.004 }, 0.6, 1.8);
-    add(new THREE.IcosahedronGeometry(5, 2), "#fbbf24", 0.06, [0, 0, -25], { x: 0.001, y: 0.002 }, 0.2, 1);
+    const loader = new THREE.TextureLoader();
+
+    function makePngSprite(path, size) {
+      const texture = loader.load(path);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.55 });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(size, size, 1);
+      return sprite;
+    }
+
+    // ── Logo config: path, position, size, float speed/amplitude, rotation ──
+    // Save each PNG to your /public/logos/ folder
+    const logos = [
+      { path: "/logos/react.png",           pos: [-14, 8, -8],    size: 5,   fs: 0.5,  fa: 2,   rotSpeed: 0.004 },
+      { path: "/logos/angular.png",         pos: [17, -4, -6],    size: 5,   fs: 0.7,  fa: 1.5, rotSpeed: -0.003 },
+      { path: "/logos/power-apps.png",      pos: [0, 1, -18],     size: 6.5, fs: 0.2,  fa: 1,   rotSpeed: 0.002 },
+      { path: "/logos/dataverse.png",       pos: [-17, -9, -10],  size: 5,   fs: 0.6,  fa: 1.8, rotSpeed: -0.004 },
+      { path: "/logos/power-platform.png",  pos: [12, 11, -12],   size: 5,   fs: 0.3,  fa: 3,   rotSpeed: 0.005 },
+      { path: "/logos/azure.png",           pos: [-8, -12, -9],   size: 5.5, fs: 0.8,  fa: 1.2, rotSpeed: -0.003 },
+      { path: "/logos/microsoft.png",       pos: [20, 6, -14],    size: 4.5, fs: 0.4,  fa: 2.5, rotSpeed: 0.003 },
+      { path: "/logos/dotnet.png",          pos: [-20, 3, -13],   size: 4.5, fs: 0.55, fa: 1.6, rotSpeed: -0.002 },
+    ];
+
+    logos.forEach((l) => {
+      const sprite = makePngSprite(l.path, l.size);
+      sprite.position.set(...l.pos);
+      scene.add(sprite);
+      shapes.push({ mesh: sprite, baseY: l.pos[1], fs: l.fs, fa: l.fa, rotSpeed: l.rotSpeed });
+    });
 
     // Connection lines
     const linePos = new Float32Array(particleCount * 6);
@@ -136,7 +154,10 @@ function ThreeScene() {
       lineGeo.setDrawRange(0, li);
       lineGeo.attributes.position.needsUpdate = true;
 
-      shapes.forEach((s) => { s.mesh.rotation.x += s.rs.x; s.mesh.rotation.y += s.rs.y; s.mesh.position.y += Math.sin(t * s.fs) * 0.01 * s.fa; });
+      shapes.forEach((s) => {
+        s.mesh.position.y = s.baseY + Math.sin(t * s.fs) * s.fa;
+        s.mesh.material.rotation += s.rotSpeed;
+      });
       particles.rotation.y = t * 0.015;
       renderer.render(scene, camera);
     };
@@ -192,11 +213,33 @@ function SkillBar({ name, level, delay, color }) {
 export default function Portfolio3D() {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [photo, setPhoto] = useState(null);
-  const fileRef = useRef(null);
-  const profileSrc = photo || DATA.profileImage;
+  const [articles, setArticles] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleUpload = (e) => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onload = (ev) => setPhoto(ev.target.result); r.readAsDataURL(f); };
+  // Fetch articles and projects from MongoDB API
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [artRes, projRes] = await Promise.all([
+          fetch("/api/articles").then((r) => r.json()),
+          fetch("/api/projects").then((r) => r.json()),
+        ]);
+        if (artRes.success && artRes.data) setArticles(artRes.data);
+        else setArticles(DATA.articles); // fallback to hardcoded
+
+        if (projRes.success && projRes.data) setProjects(projRes.data);
+        else setProjects(DATA.projects); // fallback to hardcoded
+      } catch (err) {
+        console.error("API fetch failed, using fallback data:", err);
+        setArticles(DATA.articles);
+        setProjects(DATA.projects);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -276,7 +319,7 @@ export default function Portfolio3D() {
       <section id="home" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1, padding: "120px 24px 60px" }}>
         <div className="hero-inner" style={{ maxWidth: 1100, width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 60, flexWrap: "wrap" }}>
           <div className="hero-left" style={{ flex: 1, minWidth: 300, display: "flex", flexDirection: "column" }}>
-            <Reveal><p style={{ fontSize: 13, letterSpacing: 4, textTransform: "uppercase", color: "#a78bfa", marginBottom: 16, fontWeight: 500 }}>Hello, I&apos;m</p></Reveal>
+            <Reveal><p style={{ fontSize: 13, letterSpacing: 4, textTransform: "uppercase", color: "#a78bfa", marginBottom: 16, fontWeight: 500 }}>Hello, I'm</p></Reveal>
             <Reveal delay={0.1}><h1 style={{ fontFamily: "'Sora'", fontSize: "clamp(36px, 5.5vw, 64px)", fontWeight: 700, lineHeight: 1.1, marginBottom: 16, background: "linear-gradient(135deg, #f8f8f8 0%, #a78bfa 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{DATA.name}</h1></Reveal>
             <Reveal delay={0.2}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
@@ -294,16 +337,8 @@ export default function Portfolio3D() {
           </div>
           <Reveal delay={0.2} direction="left">
             <div style={{ position: "relative", flexShrink: 0 }}>
-              <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} style={{ display: "none" }} />
-              <div className="photo-frame" onClick={() => !profileSrc && fileRef.current?.click()} style={{ width: 280, height: 340, borderRadius: 16, overflow: "hidden", border: "1px solid #ffffff12", background: "#0a0a10", position: "relative", zIndex: 2, cursor: "pointer", transition: "transform 0.5s, box-shadow 0.5s" }}>
-                {profileSrc ? (
-                  <img src={profileSrc} alt={DATA.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                ) : (
-                  <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(145deg, #0c0c14, #080810)" }}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    <span style={{ color: "#555", fontSize: 11, marginTop: 10, letterSpacing: 2, textTransform: "uppercase" }}>Upload Photo</span>
-                  </div>
-                )}
+              <div className="photo-frame" style={{ width: 280, height: 340, borderRadius: 16, overflow: "hidden", border: "1px solid #ffffff12", background: "#0a0a10", position: "relative", zIndex: 2, transition: "transform 0.5s, box-shadow 0.5s" }}>
+                <img src={DATA.profileImage} alt={DATA.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
               {/* Glow border */}
               <div style={{ position: "absolute", inset: -1, borderRadius: 16, background: "linear-gradient(135deg, #a78bfa33, transparent 60%, #22d3ee33)", zIndex: 1, pointerEvents: "none" }} />
@@ -348,18 +383,27 @@ export default function Portfolio3D() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <Reveal>
             <p style={{ fontSize: 12, letterSpacing: 3, textTransform: "uppercase", color: "#a78bfa", marginBottom: 12, fontWeight: 500 }}>02 — Articles</p>
-            <h2 style={{ fontFamily: "'Sora'", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 600, marginBottom: 40, lineHeight: 1.2, background: "linear-gradient(135deg, #f0f0f0, #a78bfa88)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Things I&apos;ve written</h2>
+            <h2 style={{ fontFamily: "'Sora'", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 600, marginBottom: 40, lineHeight: 1.2, background: "linear-gradient(135deg, #f0f0f0, #a78bfa88)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Things I've written</h2>
           </Reveal>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
-            {DATA.articles.map((a, i) => (
-              <Reveal key={a.id} delay={i * 0.1}>
-                <div className="article-card" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid #ffffff08", borderRadius: 14, padding: 28, cursor: "pointer", height: "100%", display: "flex", flexDirection: "column" }}>
-                  <div style={{ fontFamily: "'Sora'", fontSize: 36, fontWeight: 700, color: "#a78bfa12", marginBottom: 12 }}>0{a.id}</div>
+            {loading ? (
+              <p style={{ color: "#555", fontSize: 14 }}>Loading articles...</p>
+            ) : articles.map((a, i) => (
+              <Reveal key={a._id || a.id || i} delay={i * 0.1}>
+                <div className="article-card" onClick={() => { if (a.slug) window.location.href = `/articles/${a.slug}`; }} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid #ffffff08", borderRadius: 14, padding: 28, cursor: "pointer", height: "100%", display: "flex", flexDirection: "column", textDecoration: "none" }}>
+                  <div style={{ fontFamily: "'Sora'", fontSize: 36, fontWeight: 700, color: "#a78bfa12", marginBottom: 12 }}>0{i + 1}</div>
                   <h3 style={{ fontFamily: "'Sora'", fontSize: 18, fontWeight: 600, color: "#eee", marginBottom: 12, lineHeight: 1.4 }}>{a.title}</h3>
                   <p style={{ fontSize: 14, color: "#888", lineHeight: 1.6, flex: 1, marginBottom: 16 }}>{a.excerpt}</p>
-                  <div style={{ display: "flex", gap: 8, fontSize: 12, color: "#555", marginBottom: 12 }}><span>{a.date}</span><span>·</span><span>{a.readTime}</span></div>
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                    {a.tags.map((t) => <span key={t} style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: "#a78bfa", background: "rgba(167,139,250,0.08)", padding: "3px 8px", borderRadius: 4, fontWeight: 500 }}>{t}</span>)}
+                  <div style={{ display: "flex", gap: 8, fontSize: 12, color: "#555", marginBottom: 12 }}>
+                    <span>{a.publishedAt ? new Date(a.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : a.date}</span>
+                    <span>·</span>
+                    <span>{a.readTime}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {(a.tags || []).map((t) => <span key={t} style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: "#a78bfa", background: "rgba(167,139,250,0.08)", padding: "3px 8px", borderRadius: 4, fontWeight: 500 }}>{t}</span>)}
+                    </div>
+                    <span style={{ color: "#555", fontSize: 13 }}>Read →</span>
                   </div>
                 </div>
               </Reveal>
@@ -376,17 +420,19 @@ export default function Portfolio3D() {
             <h2 style={{ fontFamily: "'Sora'", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 600, marginBottom: 40, lineHeight: 1.2, background: "linear-gradient(135deg, #f0f0f0, #a78bfa88)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Open Source & Side Projects</h2>
           </Reveal>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
-            {DATA.projects.map((p, i) => (
-              <Reveal key={p.name} delay={i * 0.08}>
+            {loading ? (
+              <p style={{ color: "#555", fontSize: 14 }}>Loading projects...</p>
+            ) : projects.map((p, i) => (
+              <Reveal key={p._id || p.name || i} delay={i * 0.08}>
                 <div className="project-card" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid #ffffff08", borderRadius: 14, padding: 28, cursor: "pointer", display: "flex", flexDirection: "column", gap: 10, height: "100%" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={p.color} strokeWidth="1.5"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={p.languageColor || p.color || "#a78bfa"} strokeWidth="1.5"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
                   </div>
                   <h3 style={{ fontFamily: "'Sora'", fontSize: 17, fontWeight: 600, color: "#eee" }}>{p.name}</h3>
                   <p style={{ fontSize: 14, color: "#888", lineHeight: 1.6, flex: 1 }}>{p.description}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 8 }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#999" }}><span style={{ width: 8, height: 8, borderRadius: "50%", background: p.color, display: "inline-block" }} />{p.language}</span>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#999" }}><span style={{ width: 8, height: 8, borderRadius: "50%", background: p.languageColor || p.color || "#a78bfa", display: "inline-block" }} />{p.language}</span>
                     <span style={{ fontSize: 13, color: "#666" }}>★ {p.stars}</span>
                     <span style={{ fontSize: 13, color: "#666" }}>⑂ {p.forks}</span>
                   </div>
@@ -402,8 +448,8 @@ export default function Portfolio3D() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <Reveal>
             <p style={{ fontSize: 12, letterSpacing: 3, textTransform: "uppercase", color: "#a78bfa", marginBottom: 12, fontWeight: 500 }}>04 — Contact</p>
-            <h2 style={{ fontFamily: "'Sora'", fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 600, marginBottom: 16, lineHeight: 1.2, background: "linear-gradient(135deg, #f0f0f0, #a78bfa88)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Let&apos;s build something together.</h2>
-            <p style={{ color: "#777", fontSize: 16, maxWidth: 480, lineHeight: 1.7, marginBottom: 40 }}>I&apos;m always open to new opportunities, collaborations, or a good conversation about D365 and enterprise tech.</p>
+            <h2 style={{ fontFamily: "'Sora'", fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 600, marginBottom: 16, lineHeight: 1.2, background: "linear-gradient(135deg, #f0f0f0, #a78bfa88)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Let's build something together.</h2>
+            <p style={{ color: "#777", fontSize: 16, maxWidth: 480, lineHeight: 1.7, marginBottom: 40 }}>I'm always open to new opportunities, collaborations, or a good conversation about D365 and enterprise tech.</p>
           </Reveal>
           <Reveal delay={0.15}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>

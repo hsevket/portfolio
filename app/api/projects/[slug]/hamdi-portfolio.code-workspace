@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "../../../.."
+		},
+		{
+			"path": "../../../../../../portfolio-mongodb-setup/pages"
+		},
+		{
+			"path": "../../../../../../portfolio-mongodb-setup/scripts"
+		},
+		{
+			"path": "../../../../../../portfolio-mongodb-setup/{lib,models,pages"
+		},
+		{
+			"path": "../../../../../../portfolio-mongodb-setup/lib"
+		},
+		{
+			"path": "../../../../../../portfolio-mongodb-setup/models"
+		}
+	],
+	"settings": {}
+}
