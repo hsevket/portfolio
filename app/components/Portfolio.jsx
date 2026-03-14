@@ -338,7 +338,7 @@ export default function Portfolio3D() {
           <Reveal delay={0.2} direction="left">
             <div style={{ position: "relative", flexShrink: 0 }}>
               <div className="photo-frame" style={{ width: 280, height: 340, borderRadius: 16, overflow: "hidden", border: "1px solid #ffffff12", background: "#0a0a10", position: "relative", zIndex: 2, transition: "transform 0.5s, box-shadow 0.5s" }}>
-                <img src={DATA.profileImage} alt={DATA.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <img src={DATA.profileImage} alt={DATA.name} style={{ width: "100%", height: "110%", objectFit: "cover", display: "block" }} />
               </div>
               {/* Glow border */}
               <div style={{ position: "absolute", inset: -1, borderRadius: 16, background: "linear-gradient(135deg, #a78bfa33, transparent 60%, #22d3ee33)", zIndex: 1, pointerEvents: "none" }} />
